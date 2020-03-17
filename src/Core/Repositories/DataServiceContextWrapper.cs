@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Services.Client;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -11,6 +10,8 @@ using System.Xml.Linq;
 
 namespace NuGet
 {
+    using Microsoft.OData.Client;
+
     [CLSCompliant(false)]
     public class DataServiceContextWrapper : IDataServiceContext
     {
@@ -56,15 +57,15 @@ namespace NuGet
             }
         }
 
-        public event EventHandler<SendingRequestEventArgs> SendingRequest
+        public event EventHandler<SendingRequest2EventArgs> SendingRequest
         {
             add
             {
-                _context.SendingRequest += value;
+                _context.SendingRequest2 += value;
             }
             remove
             {
-                _context.SendingRequest -= value;
+                _context.SendingRequest2 -= value;
             }
         }
 

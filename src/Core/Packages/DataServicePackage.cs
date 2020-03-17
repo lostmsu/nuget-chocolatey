@@ -1,21 +1,17 @@
 using NuGet.Resources;
 using System;
 using System.Collections.Generic;
-using System.Data.Services.Common;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
+using Microsoft.OData.Client;
 
 namespace NuGet
 {
-    [DataServiceKey("Id", "Version")]
-    [EntityPropertyMapping("LastUpdated", SyndicationItemProperty.Updated, SyndicationTextContentKind.Plaintext, keepInContent: false)]
-    [EntityPropertyMapping("Id", SyndicationItemProperty.Title, SyndicationTextContentKind.Plaintext, keepInContent: false)]
-    [EntityPropertyMapping("Authors", SyndicationItemProperty.AuthorName, SyndicationTextContentKind.Plaintext, keepInContent: false)]
-    [EntityPropertyMapping("Summary", SyndicationItemProperty.Summary, SyndicationTextContentKind.Plaintext, keepInContent: false)]
+    [Key("Id", "Version")]
     [CLSCompliant(false)]
     public class DataServicePackage : IPackage
     {
@@ -24,6 +20,7 @@ namespace NuGet
         private string _licenseNames;
         internal IPackage _package;
 
+        [OriginalName("Title")]
         public string Id
         {
             get;
@@ -41,7 +38,7 @@ namespace NuGet
             get;
             set;
         }
-
+        [OriginalName("AuthorName")]
         public string Authors
         {
             get;
@@ -118,7 +115,7 @@ namespace NuGet
             get;
             set;
         }
-
+        [OriginalName("Updated")]
         public DateTimeOffset LastUpdated
         {
             get;

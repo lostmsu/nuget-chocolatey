@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Services.Client;
 using System.Linq;
 using System.Linq.Expressions;
+
+using Microsoft.OData.Client;
 
 namespace NuGet
 {

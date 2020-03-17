@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.Services.Client;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Windows;
+
+using Microsoft.OData.Client;
 using NuGet.Resources;
 
 namespace NuGet
 {
+    using System.Net;
+    using Microsoft.OData;
+
     public class DataServicePackageRepository : 
         PackageRepositoryBase, 
         IHttpClientEvents, 
@@ -202,12 +206,25 @@ namespace NuGet
             package.Downloader = _packageDownloader;
         }
 
-        private void OnSendingRequest(object sender, SendingRequestEventArgs e)
+        private void OnSendingRequest(object sender, SendingRequest2EventArgs e)
         {
+            var request = MakeRequest(e.RequestMessage);
             // Initialize the request
-            _httpClient.InitializeRequest(e.Request);
+            _httpClient.InitializeRequest(request);
 
-            RaiseSendingRequest(new WebRequestEventArgs(e.Request));
+            RaiseSendingRequest(new WebRequestEventArgs(request));
+        }
+
+        static WebRequest MakeRequest(IODataRequestMessage requestMessage)
+        {
+            var request = WebRequest.CreateHttp(requestMessage.Url);
+            request.Method = requestMessage.Method;
+            foreach (var header in requestMessage.Headers)
+            {
+                request.Headers.Add(header.Key, header.Value);
+            }
+
+            return request;
         }
 
         private void RaiseSendingRequest(WebRequestEventArgs e)
